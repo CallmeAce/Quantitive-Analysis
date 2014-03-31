@@ -195,19 +195,68 @@ def examineExample(i2,datas_X,alpha,labels,w,b,C):
 			if i1 !=i2:
 				if takeStep(i1,i2,datas_X,labels,alpha,w,b,C):
 					return 1
-		# if didn't find any point, use random
+		# if doesn't find any point, use random
 		length = len(ind_a)
 		if length>0:
-			if not (length==1 and Ind[0]==i2):
-			
+			if not (length==1 and Ind[0]==i2):#i2 is the only candidate
+				i1 = Idx[randint(0,length-1)]
+				while i1==i2:
+					i1 = Idx[randint(0,length-1)]
+				if takeStep(i1,i2,datas_X,labels,alpha,w,b,C):
+					return 1
 
-
-
+		# if the strategies above doesn't work, use random on all the samples
+		length1 = labels.shape[0]
+		i1 = randint(0,length1-1)
+		while i1==i2:
+			i1 = randint(0,length1-1)
+		if takeStep(i1,i2,data_X,labels,alpha,w,b,C)
+			return 1
+	return 0 
 
 # The Main Algorithm
-def SMO (alpha)
+def SMO (datas_X,labels,C)
+	n_attributes = datas_X.shape[1]
+	n_datas      = datas_X.shape[0]
+	alpha        = np.zeros((1,n_datas))
+	w            = np.zeros((1,n_attributes))
+	b            = [0] # set b as list, so that it could be modified in any other functions
+	numChanged = 0
+	examineAll = 1
+	while numChanged >0 | examineAll:
+		# heuristic is like this: loop through all the samples then loop through all the support vectors, one after another. utill on changes have been made
+		if examineAll:
+			for i in range(0,n_datas-1):
+				numChanged += examineExample(i,datas_X,alpha,labels,w,b,C)
+			smoError = value_SVMFunction(alpha,datas_X,labels)
+			print("NO.1 the smo error",smoError)
+		else:
+			ind_alpha1 = [alpha<C]
+			ind_alpha2 = [alpha>0]
+			ind_alpha  = np.logical_and(ind_alpha1,ind_alpha2)
+            ind_alpha  = ind_alpha.T
+			for j in range(0,n_datas-1):
+				if ind_alpha[j]:
+					numChanged +=examineExample(ind_alpha[j],datas_X,alpha,labels,w,b,C)
+			
+			smoError = value_SVMFunction(alpha,datas_X,labels)
+			print("NO.2 the smo error",smoError)
 
+		if examineAll:
+			examineAll =0
+		elif numChanged ==0
+			numChanged =1
+		print("traning finished")
+		return alpha,w,b
 
+def M_result(X,w,b,labels):
+	length = labels.shape[0]
+	count =0
+	for i in range(0,length-1):
+		if (X[i].dot(w.T)-b)*labels[i]<0:
+			count++
+	return count
+		
 
 
 
@@ -215,11 +264,13 @@ if __name__ == "__main__":
 	eps = 1e-5 #threshold
 	tol = 1e-7
 	thre = 1e-1 #optimizaiton threshold
+	C   = 0.5
 	datas=[]
 	labels=[]
 	load_data(datas,labels)
 	datas  = np.matrix(datas)
 	labels = np.matrix(labels)
-	a = kernel(datas[0],datas[1])
-	print(datas)
-	print(a)
+#	print(datas)
+	alpha, w,b= run_smo(datas,labels,C)
+	err = M_result(datas,w,b,labels)
+	print(err)
