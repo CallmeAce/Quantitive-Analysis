@@ -94,8 +94,8 @@ def takeStep(i1,i2,datas,labels,alpha,w,b,C):
 	y2  		 = labels[i2]
 	point1		 = datas[i1,:]
 	point2		 = datas[i2,:]
-	E1			 = w.dot(point1.T) - b - y1
-	E2			 = w.dot(point2.T) - b - y2
+	E1			 = w.dot(point1.T) + b - y1
+	E2			 = w.dot(point2.T) + b - y2
 	s			 = y1 * y2
 	L, H		 = cal_LH(alpha1,alpha2)
 	if abs(L-H) <eps:
@@ -158,6 +158,16 @@ def find_Ind(List):
 	return Ind
 			
 
+
+def sep_Value(i1,X,alpha,labels,b):# when using nonlinear kernel, use this function to compute separating value
+	value =0
+	length = labels.shape(0)
+	for i in range(0,length-1):
+		value += alpha[i]*labels[i]*kernel(X[i],X[i1])
+	return value + b
+
+
+
 def find_Max(i2,Ind,datas_X,w,b,labels)
 	length = Ind.shape[0]
 	Max    = Ind[0]
@@ -176,7 +186,7 @@ def examineExample(i2,datas_X,alpha,labels,w,b,C):
 	y2 = lables[i2]
 	alpha2 = alpha[i2]
 	point2 = datas_X[i2,:]
-	E2 = w.dot(point2.T)-b-y2
+	E2 = w.dot(point2.T)+b-y2
 	r2 = E2 *y2
 	#KKT condition:
 	# alpha_i=0<==>y_i*u_i>=1
@@ -253,7 +263,7 @@ def M_result(X,w,b,labels):
 	length = labels.shape[0]
 	count =0
 	for i in range(0,length-1):
-		if (X[i].dot(w.T)-b)*labels[i]<0:
+		if (X[i].dot(w.T)+b)*labels[i]<0:
 			count++
 	return count
 		
