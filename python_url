@@ -6,3 +6,5 @@ headers={'User-Agent':user_agent,}
 request = urlr.Request(url,None,headers)
 strHtml = urlr.urlopen(request).read()
 print(strHtml)
+f = open('test.txt','wb')
+f.write(strHtml)
