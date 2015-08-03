@@ -77,5 +77,5 @@ if __name__ == '__main__':
 		str_list  = str_list.split(',')
 		if str_list[30] !='':
 			print(str_list[30])
-			sql = """insert into """+file_1[0:-4]+""" values ( """ +file_1[0:-4] +
-				","+str_list[30]+","+
+			sql = """insert into ""+file_1[0:-4]+"" values ('""+file_1[0:-4]+"',"+str_list[30]+"',"+
+			str_list[1]+"','"+str_list[4]+"','"+str_list[5]+"','"+str_list[3]+"', NULL,'"+str_list[8]+"','"+str_list[9]+	
